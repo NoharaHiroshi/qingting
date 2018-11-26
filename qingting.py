@@ -115,10 +115,39 @@ class QingTing:
         )
         sys.stdout.write('\r' + info_str)
 
+
+def convert_date_format(date_str):
+    date_format = datetime.datetime.strptime(date_str, '%Y%m%d')
+    return date_format
+
+
+def download_date_programs(channel_id, days=None, start_date=None, end_date=None):
+    if start_date and end_date:
+        sd = convert_date_format(start_date)
+        ed = convert_date_format(end_date)
+        days = int(ed.day - sd.day) + 1
+        for i in range(days):
+            download_date = sd + datetime.timedelta(days=i)
+            download_date_str = download_date.strftime('%Y%m%d')
+            print u'当前正在下载：%s' % download_date_str
+            QingTing(channel_id, download_date_str)
+    elif start_date and days:
+        sd = convert_date_format(start_date)
+        days = int(days) + 1
+        for i in range(days):
+            download_date = sd + datetime.timedelta(days=i)
+            download_date_str = download_date.strftime('%Y%m%d')
+            print u'当前正在下载：%s' % download_date_str
+            QingTing(channel_id, download_date_str)
+    elif end_date and days:
+        ed = convert_date_format(end_date)
+        days = int(days) + 1
+        for i in range(days):
+            download_date = ed - datetime.timedelta(days=i)
+            download_date_str = download_date.strftime('%Y%m%d')
+            print u'当前正在下载：%s' % download_date_str
+            QingTing(channel_id, download_date_str)
+
+
 if __name__ == '__main__':
-    date_time = datetime.datetime.now()
-    for i in range(1, 60):
-        download_date = date_time - datetime.timedelta(days=i)
-        download_date_str = download_date.strftime('%Y%m%d')
-        print u'当前正在下载：%s' % download_date_str
-        qt = QingTing('20210885', download_date_str)
+    pass
