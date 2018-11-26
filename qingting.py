@@ -16,7 +16,7 @@ class QingTing:
         self.download_dir = os.path.dirname(__file__)
         self.current_time = datetime.datetime.now()
         self.current_date_str = current_date_str if current_date_str else self.current_time.strftime('%Y%m%d')
-        self.main()
+        # self.main()
 
     def main(self):
         channel_name = self.get_channel_name()
@@ -27,12 +27,12 @@ class QingTing:
         if not os.path.exists(date_file_path):
             os.makedirs(date_file_path)
         programs_list = self.get_programs_list()
-        for program in programs_list:
+        for index, program in enumerate(programs_list):
             program_name = program.get('name')
             broadcasters = program.get('broadcasters')
             start_time = program.get('start_time').split(' ')[-1].replace(':', '')
             end_time = program.get('end_time').split(' ')[-1].replace(':', '')
-            self.download_programs(program_name, broadcasters, start_time, end_time, date_file_path)
+            self.download_programs(program_name, broadcasters, start_time, end_time, date_file_path, index)
 
     def get_channel_name(self):
         url = r'http://i.qingting.fm/wapi/channels/%s' % self.channel_id
@@ -49,7 +49,8 @@ class QingTing:
         channel_list = data.get('data')
         return channel_list
 
-    def download_programs(self, program_name, broadcasters, start_time, end_time, date_file_path):
+    def download_programs(self, program_name, broadcasters, start_time, end_time, date_file_path, index):
+        index += 1
         try:
             url = r'http://lcache.qingting.fm/cache/%s/%s/%s_%s_%s_%s_24_0.aac' \
                   % (self.current_date_str, self.channel_id, self.channel_id, self.current_date_str, start_time, end_time)
@@ -61,9 +62,9 @@ class QingTing:
             else:
                 broadcasters_str = ''
             if broadcasters_str:
-                file_name = '%s_%s_%s_%s_%s.aac' % (program_name, broadcasters_str, self.current_date_str, start_time, end_time)
+                file_name = '%s_%s_%s_%s_%s_%s.aac' % (index, program_name, broadcasters_str, self.current_date_str, start_time, end_time)
             else:
-                file_name = '%s_%s_%s_%s.aac' % (program_name, self.current_date_str, start_time, end_time)
+                file_name = '%s_%s_%s_%s_%s.aac' % (index, program_name, self.current_date_str, start_time, end_time)
             file_path = os.path.join(date_file_path, file_name)
             audio_response = requests.get(url, stream=True)
             all_file_size = int(audio_response.headers['content-length'])
@@ -115,4 +116,9 @@ class QingTing:
         sys.stdout.write('\r' + info_str)
 
 if __name__ == '__main__':
-    qt = QingTing('20210885', '20181124')
+    date_time = datetime.datetime.now()
+    for i in range(1, 60):
+        download_date = date_time - datetime.timedelta(days=i)
+        download_date_str = download_date.strftime('%Y%m%d')
+        print u'当前正在下载：%s' % download_date_str
+        qt = QingTing('20210885', download_date_str)
