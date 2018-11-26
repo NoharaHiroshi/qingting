@@ -15,3 +15,4 @@
 
 ### 使用方法 ###
 进入项目根目录下： 命令行运行python main.py -h 查看使用方法，应该很简单。
+电台id是指：http://www.qingting.fm/radios/电台id
