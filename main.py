@@ -4,7 +4,7 @@ import argparse
 from qingting import QingTing, download_date_programs
 
 parser = argparse.ArgumentParser(description=u"下载蜻蜓FM电台节目，"
-                                             u"目前蜻蜓FM保存电台节目时间大约为2个月，下载2个之前的节目无效")
+                                             u"目前蜻蜓FM保存电台节目时间大约为2个月，下载2个月之前的节目无效")
 parser.add_argument("-c", "--channel", help=u"电台ID， 例如：20210885，不填写日期参数则默认下载前一天电台节目")
 parser.add_argument("-d", "--date", help=u"电台日期， 例如：2018年1月1日记作20180101")
 parser.add_argument("-s", "--startDate", help=u"开始日期， 例如：2018年1月1日记作20180101")

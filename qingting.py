@@ -14,7 +14,7 @@ class QingTing:
     def __init__(self, channel_id, current_date_str=None):
         self.channel_id = channel_id
         self.download_dir = os.path.dirname(__file__)
-        self.current_time = datetime.datetime.now()
+        self.current_time = datetime.datetime.now() - datetime.timedelta(days=1)
         self.current_date_str = current_date_str if current_date_str else self.current_time.strftime('%Y%m%d')
         self.main()
 
