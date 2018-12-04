@@ -51,7 +51,7 @@ class QingTing:
     def get_channel_name(self):
         url = r'http://i.qingting.fm/wapi/channels/%s' % self.channel_id
         response = requests.get(url, headers=self.headers)
-        if response.status_code == '200':
+        if str(response.status_code) == '200':
             data = ujson.loads(response.text)
             name = data.get('data').get('name')
             return name
