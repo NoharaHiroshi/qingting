@@ -142,7 +142,7 @@ def download_date_programs(channel_id, days=None, start_date=None, end_date=None
     if start_date and end_date:
         sd = convert_date_format(start_date)
         ed = convert_date_format(end_date)
-        days = int(ed.day - sd.day) + 1
+        days = int((ed - sd).days) + 1
         for i in range(days):
             download_date = sd + datetime.timedelta(days=i)
             download_date_str = download_date.strftime('%Y%m%d')
@@ -167,5 +167,4 @@ def download_date_programs(channel_id, days=None, start_date=None, end_date=None
 
 
 if __name__ == '__main__':
-    qt = QingTing('20210885')
-    print qt.get_channel_name()
+    pass
