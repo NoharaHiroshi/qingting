@@ -16,10 +16,24 @@ class QingTing:
         self.download_dir = os.path.dirname(__file__)
         self.current_time = datetime.datetime.now() - datetime.timedelta(days=1)
         self.current_date_str = current_date_str if current_date_str else self.current_time.strftime('%Y%m%d')
+        self.headers = {
+            'Origin': 'http://www.qingting.fm',
+            'Referer': 'http://www.qingting.fm/radios/' + channel_id,
+            'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36'
+                          ' (KHTML, like Gecko) Chrome/64.0.3282.140 Safari/537.36',
+            'Host': 'i.qingting.fm',
+            'Pragma': 'no-cache',
+            'Cache-Control': 'no-cache',
+            'Accept-Encoding': 'gzip, deflate',
+            'Accept-Language': 'zh-CN,zh;q=0.9'
+        }
         self.main()
 
     def main(self):
         channel_name = self.get_channel_name()
+        if not channel_name:
+            print u'当前电台未获取'
+            return
         channel_file_path = os.path.join(self.download_dir, channel_name)
         if not os.path.exists(channel_file_path):
             os.makedirs(channel_file_path)
@@ -36,10 +50,13 @@ class QingTing:
 
     def get_channel_name(self):
         url = r'http://i.qingting.fm/wapi/channels/%s' % self.channel_id
-        response = requests.get(url)
-        data = ujson.loads(response.text)
-        name = data.get('data').get('name')
-        return name
+        response = requests.get(url, headers=self.headers)
+        if response.status_code == '200':
+            data = ujson.loads(response.text)
+            name = data.get('data').get('name')
+            return name
+        else:
+            return None
 
     def get_programs_list(self):
         url = r'http://i.qingting.fm/wapi/channels/%s/programs/date/%s' \
@@ -150,4 +167,5 @@ def download_date_programs(channel_id, days=None, start_date=None, end_date=None
 
 
 if __name__ == '__main__':
-    pass
+    qt = QingTing('20210885')
+    print qt.get_channel_name()
